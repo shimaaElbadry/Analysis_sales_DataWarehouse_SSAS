@@ -1,0 +1,65 @@
+--1)Write DMX to Dispaly Sales QTY Measure.
+select [Measures].[Qty] on columns
+from sales_Q3
+
+--2)Write DMX to Dispaly Sales Qty and Qty Total price Measures.
+select {[Measures].[Qty]  , [Measures].[Qty Total Price]}on columns  
+from sales_Q3
+
+--3)Write DMX to Dispaly all Measures in Sales Cube
+select [Measures].allmembers on columns
+from sales_Q3
+
+--4)Write DMX to Display Qty per Customer with the Total Qty
+select {[Measures].[Qty]  , [Measures].[Qty Total Price]}on columns  ,
+	[Customer Dim].[Customer Name].allmembers on rows
+from sales_Q3
+
+--5)Write DMX to Display Qty per Customer without the Total Qty
+select [Measures].[Qty] on columns  ,
+	[Customer Dim].[Customer Name].allmembers on rows
+from sales_Q3
+
+--6)Write DMX to Display Qty and Number of orders per Customer in (2007)
+select {[Measures].[Fact Sales Count], [Measures].[Qty]}on columns ,
+	[Customer Dim].[Customer Name].allmembers on rows
+from sales_Q3
+where [Time Dim].[Calendar Year].[2007]
+
+
+--7)Write DMX to Display Qty per year for Customer1
+select [Measures].[Qty]on columns ,
+	[Time Dim].[Calendar Year].allmembers on rows
+from sales_Q3
+where [Customer Dim].[Customer Name].[Customer1]
+
+--8)Write DMX to Display Qty per customer for each product
+select [Customer Dim].[Customer Name].allmembers on columns,
+	[Product Dim].[Product Name].allmembers on rows
+from sales_Q3
+where [Measures].[Qty]
+
+--9)Write DMX to Display Qty per customer for each product in each year
+select { ([Customer Dim].[Customer Name].allmembers ) * ([Time Dim].[Calendar Year].allmembers ) }on columns,
+	[Product Dim].[Product Name].allmembers on rows
+from sales_Q3
+where [Measures].[Qty]
+
+--10) Write DMX to Display Qty of products which customer1 bought form product1 in 2007
+
+select [Customer Dim].[Customer ID].[1]  on columns ,
+	[Product Dim].[Product ID].[1] on rows
+from sales_Q3
+where  ([Measures].[Qty] , [Time Dim].[Calendar Year].[2007])
+
+--11) display number of Customers Who deals with Egypt Channel 
+
+select [Measures].[Customer Dim Count] on columns
+from Sales_Q3
+where [Channel Dim].[Country].[Egypt]
+
+--12) Write DMX to Display Qty per year for each channel 
+select [Channel Dim].[Channal ID].allmembers on columns,
+[Time Dim].[Calendar Year].allmembers on rows
+from sales_Q3
+where [Measures].[Qty]
